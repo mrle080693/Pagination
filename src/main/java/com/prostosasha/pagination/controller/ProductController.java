@@ -28,9 +28,15 @@ public class ProductController {
 
     @GetMapping("/{page}/{size}")
     public List<Product> getAll(@PathVariable int page, @PathVariable int size) {
-        Pageable firstPageWithTwoElements = PageRequest.of(page, size);
-        Page<Product> allProducts = productRepository.findAll(firstPageWithTwoElements);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> allProducts = productRepository.findAll(pageable);
 
         return allProducts.getContent();
+    }
+
+    @GetMapping("/{price}/{page}/{size}")
+    public List<Product> getAllByPrice(@PathVariable double price, @PathVariable int page, @PathVariable int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAllByPrice(price , pageable);
     }
 }
