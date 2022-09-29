@@ -1,12 +1,8 @@
 package com.prostosasha.pagination.controller;
 
 import com.prostosasha.pagination.entity.Product;
-import com.prostosasha.pagination.repository.ProductRepository;
+import com.prostosasha.pagination.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,37 +11,30 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
     public Product create(@RequestBody Product product) {
-        return productRepository.save(product);
+        return productService.save(product);
     }
 
     @GetMapping("/{page}/{size}")
-    public List<Product> getAll(@PathVariable int page, @PathVariable int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> allProducts = productRepository.findAll(pageable);
-
-        return allProducts.getContent();
+    public List<Product> findAll(@PathVariable int page, @PathVariable int size) {
+        return productService.findAll(page, size);
     }
 
     @GetMapping("/{price}/{page}/{size}")
     public List<Product> getAllByPrice(@PathVariable double price, @PathVariable int page, @PathVariable int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return productRepository.findAllByPrice(price, pageable);
+        return productService.findAllByPrice(price, page, size);
     }
 
     @GetMapping("/getAllSorted/{page}/{size}/{paramNameForSort}")
     public List<Product> getAllSorted(@PathVariable int page, @PathVariable int size, @PathVariable String paramNameForSort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(paramNameForSort));
-        Page<Product> allProducts = productRepository.findAll(pageable);
-
-        return allProducts.getContent();
+        return productService.findAllSorted(page, size, paramNameForSort);
     }
 }
