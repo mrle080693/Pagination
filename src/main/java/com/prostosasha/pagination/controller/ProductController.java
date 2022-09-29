@@ -1,6 +1,7 @@
 package com.prostosasha.pagination.controller;
 
 import com.prostosasha.pagination.entity.Product;
+import com.prostosasha.pagination.exception.ValidationException;
 import com.prostosasha.pagination.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,9 @@ public class ProductController {
     }
 
     @GetMapping("/getAllSorted/{page}/{size}/{paramNameForSort}")
-    public List<Product> getAllSorted(@PathVariable int page, @PathVariable int size, @PathVariable String paramNameForSort) {
+    public List<Product> getAllSorted
+            (@PathVariable int page, @PathVariable int size, @PathVariable String paramNameForSort)
+            throws ValidationException {
         return productService.findAllSorted(page, size, paramNameForSort);
     }
 }
